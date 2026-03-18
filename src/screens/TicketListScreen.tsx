@@ -14,7 +14,8 @@ import { TicketCard } from "../components/TicketCard";
 import { RootStackParamList } from "../navigation/RootNavigator";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { loadTickets, setSelectedStatus } from "../store/ticketsSlice";
-
+import { TextInput } from "react-native";
+import { setSearch } from "../store/ticketsSlice";
 export function TicketListScreen({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, "TicketList">) {
@@ -51,7 +52,13 @@ export function TicketListScreen({
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.subtitle}>Prueba técnica React Native</Text>
-
+      {/* 🔍 Input de búsqueda */}
+      <TextInput
+        placeholder="Buscar tickets..."
+        value={search}
+        onChangeText={(text) => dispatch(setSearch(text))}
+        style={styles.searchInput}
+      />
       <FilterBar
         value={selectedStatus}
         onChange={(value) => dispatch(setSelectedStatus(value))}
@@ -123,5 +130,14 @@ const styles = StyleSheet.create({
   error: {
     color: "#b91c1c",
     textAlign: "center",
+  },
+  searchInput: {
+    marginHorizontal: 16,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 10,
+    backgroundColor: "#fff",
   },
 });
