@@ -17,6 +17,7 @@ interface TicketsState {
   loading: boolean;
   error: string | null;
   selectedStatus: TicketStatus | "all";
+  search: string;
 }
 
 const initialState: TicketsState = {
@@ -24,6 +25,7 @@ const initialState: TicketsState = {
   loading: false,
   error: null,
   selectedStatus: "all",
+  search: "",
 };
 // Se mejora el manejo de errores usando rejectWithValue
 // para poder enviar mensajes personalizados desde el servicio (API)
@@ -53,6 +55,9 @@ const ticketsSlice = createSlice({
     setSelectedStatus(state, action: PayloadAction<TicketStatus | "all">) {
       state.selectedStatus = action.payload;
     },
+    setSearch(state, action: PayloadAction<string>) {
+      state.search = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -81,6 +86,6 @@ const ticketsSlice = createSlice({
       });
   },
 });
-
-export const { setSelectedStatus } = ticketsSlice.actions;
+// Estado para manejar búsqueda de tickets por texto (title/description)
+export const { setSelectedStatus, setSearch } = ticketsSlice.actions;
 export default ticketsSlice.reducer;
