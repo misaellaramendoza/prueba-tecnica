@@ -22,16 +22,31 @@ export function TicketListScreen({
   const { items, loading, error, selectedStatus } = useAppSelector(
     (state) => state.tickets,
   );
+  const search = useAppSelector((state) => state.tickets.search);
 
   useEffect(() => {
     // FIX: evitar múltiples llamadas al API (antes dependía de items.length)
     dispatch(loadTickets());
   }, [dispatch]);
-
+  // Se agrega filtro por búsqueda combinando status + texto (title/description)
   const filteredItems = useMemo(() => {
-    if (selectedStatus === "all") return items;
-    return items.filter((item) => item.status === selectedStatus);
-  }, [items, selectedStatus]);
+    let result = items;
+
+    if (selectedStatus !== "all") {
+      result = result.filter((item) => item.status === selectedStatus);
+    }
+
+    if (search.trim().length > 0) {
+      const text = search.toLowerCase();
+      result = result.filter(
+        (item) =>
+          item.title.toLowerCase().includes(text) ||
+          item.description.toLowerCase().includes(text),
+      );
+    }
+
+    return result;
+  }, [items, selectedStatus, search]);
 
   return (
     <SafeAreaView style={styles.container}>
