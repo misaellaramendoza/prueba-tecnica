@@ -1,22 +1,35 @@
-import React, { useEffect, useMemo } from 'react';
-import { ActivityIndicator, FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { FilterBar } from '../components/FilterBar';
-import { TicketCard } from '../components/TicketCard';
-import { RootStackParamList } from '../navigation/RootNavigator';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { loadTickets, setSelectedStatus } from '../store/ticketsSlice';
+import React, { useEffect, useMemo } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { FilterBar } from "../components/FilterBar";
+import { TicketCard } from "../components/TicketCard";
+import { RootStackParamList } from "../navigation/RootNavigator";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { loadTickets, setSelectedStatus } from "../store/ticketsSlice";
 
-export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStackParamList, 'TicketList'>) {
+export function TicketListScreen({
+  navigation,
+}: NativeStackScreenProps<RootStackParamList, "TicketList">) {
   const dispatch = useAppDispatch();
-  const { items, loading, error, selectedStatus } = useAppSelector((state) => state.tickets);
+  const { items, loading, error, selectedStatus } = useAppSelector(
+    (state) => state.tickets,
+  );
 
   useEffect(() => {
+    // FIX: evitar múltiples llamadas al API (antes dependía de items.length)
     dispatch(loadTickets());
-  }, [dispatch, items.length]);
+  }, [dispatch]);
 
   const filteredItems = useMemo(() => {
-    if (selectedStatus === 'all') return items;
+    if (selectedStatus === "all") return items;
     return items.filter((item) => item.status === selectedStatus);
   }, [items, selectedStatus]);
 
@@ -46,12 +59,19 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
           renderItem={({ item }) => (
             <TicketCard
               ticket={item}
-              onPress={() => navigation.navigate('TicketDetail', { ticketId: item.id })}
+              onPress={() =>
+                navigation.navigate("TicketDetail", { ticketId: item.id })
+              }
             />
           )}
-          ListEmptyComponent={<Text style={styles.feedback}>No hay tickets para mostrar.</Text>}
+          ListEmptyComponent={
+            <Text style={styles.feedback}>No hay tickets para mostrar.</Text>
+          }
           refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={() => dispatch(loadTickets())} />
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={() => dispatch(loadTickets())}
+            />
           }
         />
       )}
@@ -62,11 +82,11 @@ export function TicketListScreen({ navigation }: NativeStackScreenProps<RootStac
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: "#f8fafc",
   },
   subtitle: {
     fontSize: 14,
-    color: '#6b7280',
+    color: "#6b7280",
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 8,
@@ -76,17 +96,17 @@ const styles = StyleSheet.create({
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 24,
   },
   feedback: {
     marginTop: 10,
-    color: '#4b5563',
-    textAlign: 'center',
+    color: "#4b5563",
+    textAlign: "center",
   },
   error: {
-    color: '#b91c1c',
-    textAlign: 'center',
+    color: "#b91c1c",
+    textAlign: "center",
   },
 });
