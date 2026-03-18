@@ -1,13 +1,13 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchTickets, updateTicketStatus } from '../api/ticketsApi';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchTickets, updateTicketStatus } from "../api/ticketsApi";
 
-export type TicketStatus = 'open' | 'in_progress' | 'resolved';
+export type TicketStatus = "open" | "in_progress" | "resolved";
 
 export interface Ticket {
   id: number;
   title: string;
   description: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: "low" | "medium" | "high";
   status: TicketStatus;
   assignee: string;
 }
@@ -16,32 +16,39 @@ interface TicketsState {
   items: Ticket[];
   loading: boolean;
   error: string | null;
-  selectedStatus: TicketStatus | 'all';
+  selectedStatus: TicketStatus | "all";
 }
 
 const initialState: TicketsState = {
   items: [],
   loading: false,
   error: null,
-  selectedStatus: 'all',
+  selectedStatus: "all",
 };
 
-export const loadTickets = createAsyncThunk('tickets/load', async () => {
-  return await fetchTickets();
-});
+export const loadTickets = createAsyncThunk(
+  "tickets/load",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await fetchTickets();
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
 
 export const changeTicketStatus = createAsyncThunk(
-  'tickets/changeStatus',
+  "tickets/changeStatus",
   async ({ id, status }: { id: number; status: TicketStatus }) => {
     return await updateTicketStatus(id, status);
-  }
+  },
 );
 
 const ticketsSlice = createSlice({
-  name: 'tickets',
+  name: "tickets",
   initialState,
   reducers: {
-    setSelectedStatus(state, action: PayloadAction<TicketStatus | 'all'>) {
+    setSelectedStatus(state, action: PayloadAction<TicketStatus | "all">) {
       state.selectedStatus = action.payload;
     },
   },
@@ -57,10 +64,12 @@ const ticketsSlice = createSlice({
       })
       .addCase(loadTickets.rejected, (state) => {
         state.loading = false;
-        state.error = 'No fue posible cargar los tickets';
+        state.error = "No fue posible cargar los tickets";
       })
       .addCase(changeTicketStatus.fulfilled, (state, action) => {
-        const index = state.items.findIndex((item) => item.id === action.payload.id);
+        const index = state.items.findIndex(
+          (item) => item.id === action.payload.id,
+        );
         if (index >= 0) {
           state.items[index] = action.payload;
         }
