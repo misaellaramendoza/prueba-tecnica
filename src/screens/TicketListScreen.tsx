@@ -55,7 +55,7 @@ export function TicketListScreen({
         <FlatList
           contentContainerStyle={styles.list}
           data={filteredItems}
-          keyExtractor={(item, index) => String(index)}
+          keyExtractor={(item) => String(item.id)} // FIX: usar id único en lugar de index para evitar problemas de render
           renderItem={({ item }) => (
             <TicketCard
               ticket={item}
