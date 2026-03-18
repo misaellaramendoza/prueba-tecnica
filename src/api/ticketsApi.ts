@@ -41,6 +41,8 @@ export async function fetchTickets(): Promise<Ticket[]> {
   // Se estaba retornando un elemento duplicado manualmente:
   // return [...MOCK_TICKETS, ...MOCK_TICKETS.slice(0, 1)];
 
+  // PRUEBA, SE MANDO THROW PARA VALIDAR ERRORES
+  //throw new Error('Error de prueba');
   // FIX:
   // Se retorna únicamente la lista original para evitar duplicados
   return MOCK_TICKETS;

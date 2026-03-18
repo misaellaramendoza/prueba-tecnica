@@ -25,7 +25,9 @@ const initialState: TicketsState = {
   error: null,
   selectedStatus: "all",
 };
-
+// Se mejora el manejo de errores usando rejectWithValue
+// para poder enviar mensajes personalizados desde el servicio (API)
+// en lugar de usar errores genéricos en el reducer.
 export const loadTickets = createAsyncThunk(
   "tickets/load",
   async (_, { rejectWithValue }) => {
@@ -62,9 +64,12 @@ const ticketsSlice = createSlice({
         state.loading = false;
         state.items = action.payload;
       })
-      .addCase(loadTickets.rejected, (state) => {
+      // Se utiliza el payload del thunk para mostrar el error real proveniente del servicio.
+      // Si no existe, se usa un mensaje genérico como fallback.
+      .addCase(loadTickets.rejected, (state, action) => {
         state.loading = false;
-        state.error = "No fue posible cargar los tickets";
+        state.error =
+          (action.payload as string) || "No fue posible cargar los tickets";
       })
       .addCase(changeTicketStatus.fulfilled, (state, action) => {
         const index = state.items.findIndex(
