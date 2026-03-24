@@ -77,12 +77,9 @@ const ticketsSlice = createSlice({
           (action.payload as string) || "No fue posible cargar los tickets";
       })
       .addCase(changeTicketStatus.fulfilled, (state, action) => {
-        const index = state.items.findIndex(
-          (item) => item.id === action.payload.id,
+        state.items = state.items.map((item) =>
+          item.id === action.payload.id ? action.payload : item,
         );
-        if (index >= 0) {
-          state.items[index] = action.payload;
-        }
       });
   },
 });

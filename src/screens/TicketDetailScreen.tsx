@@ -1,16 +1,25 @@
-import React, { useMemo } from 'react';
-import { Alert, Pressable, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/RootNavigator';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { changeTicketStatus } from '../store/ticketsSlice';
+import React, { useMemo } from "react";
+import {
+  Alert,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../navigation/RootNavigator";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { changeTicketStatus } from "../store/ticketsSlice";
 
-export function TicketDetailScreen({ route }: NativeStackScreenProps<RootStackParamList, 'TicketDetail'>) {
+export function TicketDetailScreen({
+  route,
+}: NativeStackScreenProps<RootStackParamList, "TicketDetail">) {
   const dispatch = useAppDispatch();
   const ticketId = route.params.ticketId;
   const tickets = useAppSelector((state) => state.tickets.items);
 
-  const ticket = useMemo(() => tickets.find((item) => item.id === ticketId), [tickets, ticketId]);
+  const ticket = tickets.find((item) => item.id === ticketId);
 
   if (!ticket) {
     return (
@@ -22,10 +31,12 @@ export function TicketDetailScreen({ route }: NativeStackScreenProps<RootStackPa
 
   const markAsResolved = async () => {
     try {
-      await dispatch(changeTicketStatus({ id: ticket.id, status: 'resolved' })).unwrap();
-      Alert.alert('Éxito', 'El ticket fue actualizado.');
+      await dispatch(
+        changeTicketStatus({ id: ticket.id, status: "resolved" }),
+      ).unwrap();
+      Alert.alert("Éxito", "El ticket fue actualizado.");
     } catch (error) {
-      Alert.alert('Error', 'No fue posible actualizar el ticket.');
+      Alert.alert("Error", "No fue posible actualizar el ticket.");
     }
   };
 
@@ -56,44 +67,44 @@ export function TicketDetailScreen({ route }: NativeStackScreenProps<RootStackPa
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: "#f8fafc",
     padding: 16,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: "#e5e7eb",
   },
   title: {
     fontSize: 22,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 16,
-    color: '#111827',
+    color: "#111827",
   },
   label: {
     fontSize: 12,
-    fontWeight: '700',
-    color: '#6b7280',
+    fontWeight: "700",
+    color: "#6b7280",
     marginTop: 10,
     marginBottom: 4,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   },
   body: {
     fontSize: 15,
-    color: '#1f2937',
+    color: "#1f2937",
     lineHeight: 22,
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#1f6feb',
+    backgroundColor: "#1f6feb",
     paddingVertical: 14,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
-    fontWeight: '700',
+    color: "#fff",
+    fontWeight: "700",
   },
 });

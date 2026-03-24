@@ -45,7 +45,7 @@ export async function fetchTickets(): Promise<Ticket[]> {
   //throw new Error('Error de prueba');
   // FIX:
   // Se retorna únicamente la lista original para evitar duplicados
-  return MOCK_TICKETS;
+  return [...MOCK_TICKETS];
 }
 
 export async function updateTicketStatus(
@@ -58,7 +58,7 @@ export async function updateTicketStatus(
     throw new Error("Ticket no encontrado");
   }
   ticket.status = status;
-  return { ...ticket };
+  return { ...ticket, status };
 }
 
 function wait(ms: number) {

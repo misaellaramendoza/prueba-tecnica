@@ -29,6 +29,7 @@ export function TicketListScreen({
     // FIX: evitar múltiples llamadas al API (antes dependía de items.length)
     dispatch(loadTickets());
   }, [dispatch]);
+
   // Se agrega filtro por búsqueda combinando status + texto (title/description)
   const filteredItems = useMemo(() => {
     let result = items;
